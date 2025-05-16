@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Animated,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppContext } from '../contexts/AppContext';
 import { getEmotionById } from '../data/emotions';
 
@@ -16,6 +18,7 @@ const StatementsScreen = ({ navigation }) => {
   const { t, i18n } = useTranslation();
   const { selectedEmotion, setStatements, setSelectedStatement } = useAppContext();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [expanded, setExpanded] = useState(null);
   
   // Get current language
   const currentLanguage = i18n.language;
@@ -55,6 +58,7 @@ const StatementsScreen = ({ navigation }) => {
   const handleSelectStatement = (statement, index) => {
     setSelectedItem(statement);
     setSelectedStatement(statement);
+    setExpanded(index);
     
     // Highlight selected statement
     statementAnimations.forEach((anim, i) => {
@@ -105,64 +109,74 @@ const StatementsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.titleText}>{t('main.chooseStatement')}</Text>
-        
-        <View style={styles.statementsContainer}>
-          {emotion?.statements[currentLanguage].map((statement, index) => (
-            <Animated.View
-              key={index}
-              style={[
-                styles.statementItem,
-                { 
-                  opacity: statementAnimations[index],
-                  transform: [
-                    { 
-                      translateY: statementAnimations[index].interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [50, 0],
-                      }),
-                    },
-                  ],
-                  backgroundColor: selectedItem === statement 
-                    ? emotion.colorCode 
-                    : '#fff',
-                },
-              ]}
-            >
-              <TouchableOpacity
-                onPress={() => handleSelectStatement(statement, index)}
-                activeOpacity={0.8}
-              >
-                <Text 
-                  style={[
-                    styles.statementText,
-                    selectedItem === statement && styles.selectedStatementText,
-                  ]}
-                >
-                  {statement}
-                </Text>
-              </TouchableOpacity>
-            </Animated.View>
-          ))}
-        </View>
-        
-        <Animated.View 
-          style={[
-            styles.buttonContainer, 
-            { 
-              opacity: buttonAnimation,
-              transform: [
-                {
-                  translateY: buttonAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [50, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
+          <Text style={styles.titleText}>{t('main.chooseStatement')}</Text>
+          
+          <View style={styles.statementsContainer}>
+            {emotion?.statements[currentLanguage].map((statement, index) => (
+              <Animated.View
+                key={index}
+                style={[
+                  styles.statementItem,
+                  { 
+                    opacity: statementAnimations[index],
+                    transform: [
+                      { 
+                        translateY: statementAnimations[index].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [50, 0],
+                        }),
+                      },
+                    ],
+                    backgroundColor: selectedItem === statement 
+                      ? emotion.colorCode 
+                      : '#fff',
+                    height: expanded === null || expanded === index ? 'auto' : 0,
+                    overflow: 'hidden',
+                    marginBottom: expanded === null || expanded === index ? 15 : 0,
+                  },
+                ]}
+              >
+                <TouchableOpacity
+                  onPress={() => handleSelectStatement(statement, index)}
+                  activeOpacity={0.8}
+                >
+                  <Text 
+                    style={[
+                      styles.statementText,
+                      selectedItem === statement && styles.selectedStatementText,
+                    ]}
+                  >
+                    {statement}
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            ))}
+          </View>
+        </ScrollView>
+
+        {/* Botón fijo en la parte inferior */}
+        <Animated.View style={[
+          styles.buttonContainer, 
+          { 
+            opacity: buttonAnimation,
+            transform: [
+              {
+                translateY: buttonAnimation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [50, 0],
+                }),
+              },
+            ],
+          },
+        ]}>
           <TouchableOpacity
             style={[
               styles.continueButton,
@@ -175,7 +189,7 @@ const StatementsScreen = ({ navigation }) => {
             <Text style={styles.buttonText}>{t('main.continue')}</Text>
           </TouchableOpacity>
         </Animated.View>
-      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -185,9 +199,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   scrollContent: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 80, // Espacio para el botón fijo
   },
   titleText: {
     fontSize: 24,
@@ -202,7 +219,6 @@ const styles = StyleSheet.create({
   statementItem: {
     borderRadius: 12,
     padding: 16,
-    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -219,8 +235,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
     alignItems: 'center',
-    marginTop: 20,
   },
   continueButton: {
     paddingVertical: 15,
