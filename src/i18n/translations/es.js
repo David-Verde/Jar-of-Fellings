@@ -41,4 +41,5 @@ reflection: {
   message2: "Lo lees y lo reflejas",
   message3: "Practicalo con sabiduria",
   continue: "Continuar"
+}
 };

@@ -19,6 +19,7 @@ const MainScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const { jarOpenState, setJarOpenState, resetAppState } = useAppContext();
   const videoRef = useRef(null);
+  const webVideoRef = useRef(null);
 
   useEffect(() => {
     resetAppState();
@@ -29,23 +30,36 @@ const MainScreen = ({ navigation }) => {
     setJarOpenState('opening');
 
     try {
-      if (videoRef.current) {
-        await videoRef.current.playAsync();
+      if (Platform.OS === 'web') {
+        // Para la versión web
+        if (webVideoRef.current) {
+          webVideoRef.current.currentTime = 0; // Reiniciar el video
+          webVideoRef.current.play();
+        } else {
+          console.log("Web video ref not ready, navigating directly...");
+          setJarOpenState('open');
+          navigation.navigate('Emotions');
+        }
       } else {
-        console.log("Video ref not ready, navigating directly...");
-        setJarOpenState('open');
-        navigation.navigate('Emotions');
+        // Para móviles
+        if (videoRef.current) {
+          await videoRef.current.playAsync();
+        } else {
+          console.log("Video ref not ready, navigating directly...");
+          setJarOpenState('open');
+          navigation.navigate('Emotions');
+        }
       }
-
-      setTimeout(() => {
-        setJarOpenState('open');
-        navigation.navigate('Emotions');
-      }, 4000);
     } catch (error) {
       console.error('Error playing video:', error);
       setJarOpenState('open');
       navigation.navigate('Emotions');
     }
+  };
+
+  const handleWebVideoEnd = () => {
+    setJarOpenState('open');
+    navigation.navigate('Emotions');
   };
 
   return (
@@ -59,6 +73,7 @@ const MainScreen = ({ navigation }) => {
         >
           {Platform.OS === 'web' ? (
             <video
+              ref={webVideoRef}
               src={require('../../assets/videos/jar_close.mp4')}
               style={{ 
                 width: '100%', 
@@ -71,11 +86,7 @@ const MainScreen = ({ navigation }) => {
               controls={false}
               playsInline
               muted
-              autoPlay
-              onEnded={() => {
-                setJarOpenState('open');
-                navigation.navigate('Emotions');
-              }}
+              onEnded={handleWebVideoEnd}
             />
           ) : (
             <Video
