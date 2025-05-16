@@ -26,12 +26,16 @@ export const AppContextProvider = ({ children }) => {
   };
 
   // Initialize language preference from storage
-  const initLanguage = async () => {
-    const storedLanguage = await AsyncStorage.getItem('userLanguage');
-    if (storedLanguage) {
-      i18n.changeLanguage(storedLanguage);
-    }
-  };
+const initLanguage = async () => {
+  const storedLanguage = await AsyncStorage.getItem('userLanguage');
+  if (storedLanguage) {
+    i18n.changeLanguage(storedLanguage);
+  } else {
+    // Establecer español como predeterminado si no hay idioma guardado
+    i18n.changeLanguage('es');
+    await AsyncStorage.setItem('userLanguage', 'es');
+  }
+};
 
   // Reset the app state
   const resetAppState = () => {

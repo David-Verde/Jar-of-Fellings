@@ -26,12 +26,25 @@ const LoginScreen = ({ navigation }) => {
   const { setIsAuthenticated, initLanguage, changeLanguage } = useAppContext();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState(i18n.language);
+  const [language, setLanguage] = useState('en');
   const [showPassword, setShowPassword] = useState(false);
   const passwordInputRef = useRef(null);
 
   useEffect(() => {
-    initLanguage();
+    // Inicializar con el idioma guardado o español por defecto
+    const initializeLanguage = async () => {
+      const storedLanguage = await AsyncStorage.getItem('userLanguage');
+      if (storedLanguage) {
+        setLanguage(storedLanguage);
+        i18n.changeLanguage(storedLanguage);
+      } else {
+        // Si no hay idioma guardado, usar español por defecto
+        setLanguage('es');
+        i18n.changeLanguage('es');
+        await AsyncStorage.setItem('userLanguage', 'es');
+      }
+    };
+    initializeLanguage();
   }, []);
 
   const handleLogin = () => {
@@ -46,10 +59,9 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert('Error', t('login.error'));
     }
   };
-
-  const handleLanguageChange = (value) => {
+  const handleLanguageChange = async (value) => {
     setLanguage(value);
-    changeLanguage(value);
+    await changeLanguage(value);
   };
 
   const focusPasswordField = () => {
@@ -148,9 +160,8 @@ const LoginScreen = ({ navigation }) => {
             <RNPickerSelect
               onValueChange={handleLanguageChange}
               items={[
-              
+                { label: 'Español', value: 'es' },
                 { label: 'English', value: 'en' },
-                  { label: 'Español', value: 'es' },
               ]}
               value={language}
               style={pickerSelectStyles}
