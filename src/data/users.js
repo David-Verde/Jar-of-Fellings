@@ -8,11 +8,11 @@ export const users = [
     password: "KOE123"
   },
   {
-    username: "México",
+    username: "Mexico",
     password: "KOE123"
   },
   {
-    username: "Panamá",
+    username: "Panama",
     password: "KOE123"
   },
   {
