@@ -10,11 +10,11 @@ import IntensityScreen from '../screens/IntensityScreen';
 import PsalmsScreen from '../screens/PsalmsScreen';
 import StatementsScreen from '../screens/StatementsScreen';
 import FinalStatementScreen from '../screens/FinalStatementScreen';
+import ReflectionScreen from '../screens/ReflectionScreen'; // Nueva pantalla
 
 // Create stack navigator
 const Stack = createStackNavigator();
 
-// App Navigator component
 const AppNavigator = () => {
   return (
     <NavigationContainer>
@@ -32,6 +32,7 @@ const AppNavigator = () => {
         <Stack.Screen name="Psalms" component={PsalmsScreen} />
         <Stack.Screen name="Statements" component={StatementsScreen} />
         <Stack.Screen name="FinalStatement" component={FinalStatementScreen} />
+        <Stack.Screen name="Reflection" component={ReflectionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -23,7 +23,6 @@ export default {
     chooseStatement: 'Choose a basic principle:',
     finish: 'Tap to finish',
     backToStart: 'Back to start',
-    reflectOnMeaning: 'Reflect on its meaning in your life'
   },
   
   // Emotions
@@ -34,5 +33,11 @@ export default {
     anxious: 'Anxious',
     lonely: 'Lonely',
     sad: 'Sad',
+  },
+
+  // Reflection Screen
+  reflection: {
+    message: "Reflect on its meaning in your life",
+    continue: "Continue"
   },
 };

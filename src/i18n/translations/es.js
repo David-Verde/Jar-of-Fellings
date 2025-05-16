@@ -22,9 +22,7 @@ export default {
     done: 'Listo',
     chooseStatement: 'Elige un principio basico:',
     finish: 'Toca para terminar',
-    reflectOnMeaning: 'Reflexione sobre su significado en su vida',
     backToStart: 'Volver al inicio',
-
   },
   
   // Emotions
@@ -35,5 +33,11 @@ export default {
     anxious: 'Ansioso',
     lonely: 'Solitario',
     sad: 'Triste',
+  },
+
+  // Reflection Screen
+  reflection: {
+    message: "Reflexione sobre su significado en su vida",
+    continue: "Continuar"
   },
 };

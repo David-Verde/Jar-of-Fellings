@@ -77,7 +77,7 @@ const FinalStatementScreen = ({ navigation }) => {
     ]).start(() => {
       resetAppState();
       closeJar();
-      navigation.navigate('Main');
+navigation.navigate('Reflection');
     });
   };
 

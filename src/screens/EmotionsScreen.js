@@ -132,13 +132,17 @@ const styles = StyleSheet.create({
   },
   emotionListContainer: {
     paddingVertical: 10,
+    alignItems: 'center', // Centrar el grid
   },
-  emotionColumnWrapper: {
+ emotionColumnWrapper: {
     justifyContent: 'space-between',
+    width: '90%', // Controlar el ancho del contenedor
   },
   emotionItemContainer: {
     width: (width - 60) / 2,
+    height: (width - 60) / 2, // Mismo alto que ancho
     margin: 10,
+    aspectRatio: 1, // Mantener relación cuadrada
   },
   emotionItem: {
     borderRadius: 15,

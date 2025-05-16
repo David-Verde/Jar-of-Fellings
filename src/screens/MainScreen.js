@@ -11,6 +11,7 @@ import {
 import { Video } from 'expo-av';
 import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../contexts/AppContext';
+import { isWeb, isLargeScreen, isExtraLargeScreen } from '../utils/responsive';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,19 +30,17 @@ const MainScreen = ({ navigation }) => {
 
     try {
       if (videoRef.current) {
-        await videoRef.current.playAsync(); // Reproduce el video
+        await videoRef.current.playAsync();
       } else {
         console.log("Video ref not ready, navigating directly...");
         setJarOpenState('open');
         navigation.navigate('Emotions');
       }
 
-      // Después de 4 segundos, navega a Emotions
       setTimeout(() => {
         setJarOpenState('open');
         navigation.navigate('Emotions');
-      }, 4000); // 4 segundos
-
+      }, 4000);
     } catch (error) {
       console.error('Error playing video:', error);
       setJarOpenState('open');
@@ -54,14 +53,21 @@ const MainScreen = ({ navigation }) => {
       <View style={styles.contentContainer}>
         <TouchableOpacity
           activeOpacity={0.9}
-          style={styles.videoContainer}
+          style={[styles.videoContainer, isWeb && styles.webVideoContainer]}
           onPress={handleJarPress}
           disabled={jarOpenState !== 'closed'}
         >
           {Platform.OS === 'web' ? (
             <video
               src={require('../../assets/videos/jar_close.mp4')}
-              style={{ width: '100%', borderRadius: 8, height: '100%' }}
+              style={{ 
+                width: '100%', 
+                borderRadius: 8, 
+                height: '100%',
+                ...(isLargeScreen && {
+                  maxWidth: '500px'
+                })
+              }}
               controls={false}
               playsInline
               muted
@@ -104,12 +110,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
+    ...(isLargeScreen && {
+      justifyContent: 'center',
+      alignItems: 'center',
+    }),
   },
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: Platform.OS === 'ios' ? 20 : 15,
+    ...(isLargeScreen && {
+      paddingVertical: 40,
+      width: '100%',
+      maxWidth: 800,
+    }),
   },
   videoContainer: {
     width: width * 0.85,
@@ -118,6 +133,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    ...(isLargeScreen && {
+      width: 400,
+      height: 550,
+    }),
+    ...(isExtraLargeScreen && {
+      width: 500,
+      height: 650,
+    }),
+  },
+  webVideoContainer: {
+    ...(isWeb && {
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      ':hover': {
+        transform: [{ scale: 1.02 }],
+      },
+    }),
   },
   video: {
     width: '100%',
@@ -133,6 +165,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#555',
     textAlign: 'center',
+    ...(isLargeScreen && {
+      fontSize: 22,
+      marginTop: 20,
+    }),
   },
 });
 
