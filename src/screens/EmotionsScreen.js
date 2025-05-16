@@ -18,6 +18,7 @@ const { width } = Dimensions.get('window');
 const EmotionsScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const { setSelectedEmotion } = useAppContext();
+  const [isSelecting, setIsSelecting] = useState(false); // Nuevo estado
   
   // Animation values for emotion cards
   const emotionAnimations = useRef(
@@ -27,7 +28,7 @@ const EmotionsScreen = ({ navigation }) => {
   useEffect(() => {
     // Staggered animation for emotions appearing
     Animated.stagger(
-      100, // Stagger time in ms
+      100,
       emotionAnimations.map(anim => 
         Animated.spring(anim, {
           toValue: 1,
@@ -39,7 +40,10 @@ const EmotionsScreen = ({ navigation }) => {
     ).start();
   }, []);
   
-  const handleEmotionSelect = (emotion) => {
+  const handleEmotionSelect = async (emotion) => {
+    if (isSelecting) return; // Evitar múltiples selecciones
+    setIsSelecting(true); // Bloquear selección
+    
     setSelectedEmotion(emotion);
     
     // Animation for non-selected emotions to fade out
@@ -54,14 +58,16 @@ const EmotionsScreen = ({ navigation }) => {
       return null;
     }).filter(Boolean);
     
-    Animated.parallel(animationsArray).start(() => {
-      // Navigate to intensity screen
-      navigation.navigate('Intensity');
+    // Esperar a que todas las animaciones terminen
+    await new Promise(resolve => {
+      Animated.parallel(animationsArray).start(resolve);
     });
+    
+    // Navegar después de completar las animaciones
+    navigation.navigate('Intensity');
   };
   
   const renderEmotionItem = ({ item, index }) => {
-    // Animation styles for each emotion card
     const animatedStyle = {
       opacity: emotionAnimations[index],
       transform: [
@@ -86,6 +92,7 @@ const EmotionsScreen = ({ navigation }) => {
           style={[styles.emotionItem, { backgroundColor: item.colorCode }]}
           onPress={() => handleEmotionSelect(item)}
           activeOpacity={0.8}
+          disabled={isSelecting} // Deshabilitar durante la selección
         >
           <Text style={styles.emotionText}>
             {t(`emotions.${item.id}`)}
@@ -114,6 +121,7 @@ const EmotionsScreen = ({ navigation }) => {
   );
 };
 
+// Los estilos permanecen igual que en tu versión original
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,17 +140,17 @@ const styles = StyleSheet.create({
   },
   emotionListContainer: {
     paddingVertical: 10,
-    alignItems: 'center', // Centrar el grid
+    alignItems: 'center',
   },
- emotionColumnWrapper: {
+  emotionColumnWrapper: {
     justifyContent: 'space-between',
-    width: '90%', // Controlar el ancho del contenedor
+    width: '90%',
   },
   emotionItemContainer: {
     width: (width - 60) / 2,
-    height: (width - 60) / 2, // Mismo alto que ancho
+    height: (width - 60) / 2,
     margin: 10,
-    aspectRatio: 1, // Mantener relación cuadrada
+    aspectRatio: 1,
   },
   emotionItem: {
     borderRadius: 15,
