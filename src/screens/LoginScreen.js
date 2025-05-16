@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
   const { setIsAuthenticated, initLanguage, changeLanguage } = useAppContext();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState(i18n.language);
+ const [language, setLanguage] = useState('es');
   const [showPassword, setShowPassword] = useState(false);
   const passwordInputRef = useRef(null);
 
