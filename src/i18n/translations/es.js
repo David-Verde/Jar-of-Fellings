@@ -18,7 +18,7 @@ export default {
     medium: 'Media',
     high: 'Alta',
     continue: 'Continuar',
-    readAloud: 'Por favor lee estos versos en voz alta:',
+    readAloud: 'Por favor lee estos versiculos en voz alta:',
     done: 'Listo',
     chooseStatement: 'Elige un principio basico:',
     finish: 'Toca para terminar',
@@ -36,8 +36,9 @@ export default {
   },
 
   // Reflection Screen
-  reflection: {
-    message: "Reflexione sobre su significado en su vida",
-    continue: "Continuar"
-  },
+reflection: {
+  message1: "Reflexione sobre su significado en su vida",
+  message2: "Lo lees y lo reflejas",
+  message3: "Practicalo con sabiduria",
+  continue: "Continuar"
 };

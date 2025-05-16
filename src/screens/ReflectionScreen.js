@@ -17,6 +17,22 @@ const ReflectionScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const { selectedEmotion, resetAppState, closeJar } = useAppContext();
   
+  // Mensajes posibles
+  const messages = [
+    t('reflection.message1'), // "Reflexione sobre su significado en su vida"
+    t('reflection.message2'), // "Lo lees y lo reflejas"
+    t('reflection.message3')  // "Practicalo con sabiduria"
+  ];
+  
+  // Seleccionar un mensaje aleatorio
+  const [randomMessage, setRandomMessage] = React.useState('');
+  
+  useEffect(() => {
+    // Seleccionar mensaje aleatorio al montar el componente
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    setRandomMessage(messages[randomIndex]);
+  }, []);
+
   // Animaciones
   const textAnimation = useRef(new Animated.Value(0)).current;
   const buttonAnimation = useRef(new Animated.Value(0)).current;
@@ -73,7 +89,7 @@ const ReflectionScreen = ({ navigation }) => {
           },
         ]}>
           <Text style={styles.reflectionText}>
-            {t('reflection.message')}
+            {randomMessage}
           </Text>
         </Animated.View>
 

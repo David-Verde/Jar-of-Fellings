@@ -36,8 +36,10 @@ export default {
   },
 
   // Reflection Screen
-  reflection: {
-    message: "Reflect on its meaning in your life",
-    continue: "Continue"
-  },
+reflection: {
+  message1: "Reflect on its meaning in your life",
+  message2: "Read it and reflect on it",
+  message3: "Practice it with wisdom",
+  continue: "Continue"
+}
 };
