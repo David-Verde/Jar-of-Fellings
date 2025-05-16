@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
   const { setIsAuthenticated, initLanguage, changeLanguage } = useAppContext();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
- const [language, setLanguage] = useState('es');
+  const [language, setLanguage] = useState(i18n.language);
   const [showPassword, setShowPassword] = useState(false);
   const passwordInputRef = useRef(null);
 
@@ -148,8 +148,9 @@ const LoginScreen = ({ navigation }) => {
             <RNPickerSelect
               onValueChange={handleLanguageChange}
               items={[
-                { label: 'Español', value: 'es' },
+              
                 { label: 'English', value: 'en' },
+                  { label: 'Español', value: 'es' },
               ]}
               value={language}
               style={pickerSelectStyles}
