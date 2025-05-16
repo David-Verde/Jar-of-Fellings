@@ -1,0 +1,40 @@
+@media (min-width: 768px) {
+  input, textarea {
+    font-size: 16px !important;
+  }
+  
+  * {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
