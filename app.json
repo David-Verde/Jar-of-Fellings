@@ -28,7 +28,10 @@
       "package": "com.yourcompany.jarofeelings", 
   "versionCode": 1
     },
-    "web": {
+    "web": {   
+      "build": {
+        "html": "public/index.html"  
+      },
       "favicon": "./assets/favicon.png"
     },
     "extra": {
